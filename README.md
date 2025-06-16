@@ -57,16 +57,12 @@ git clone <repository-url>
 cd queue-system
 ````
 
-### 2. Install dependencies
 
-```bash
-npm install
-```
 
 ### 3. Start the server
 
 ```bash
-npm start
+node index.js
 ```
 
 The server will run on: `http://localhost:3000`

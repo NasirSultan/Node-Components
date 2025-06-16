@@ -1,14 +1,13 @@
-// worker.js
 const axios = require('axios');
-const { users } = require('./storage');
-
-let isRunning = false;
+const { users } = require('../storage');
+const { getNextJob, hasJobs } = require('./jobQueue');
 
 function startWorker() {
-  if (isRunning) return;
-  isRunning = true;
-
   setInterval(async () => {
+    if (!hasJobs()) return;
+
+    getNextJob();
+
     try {
       const res = await axios.get('https://randomuser.me/api/');
       const user = res.data.results[0];
@@ -21,8 +20,9 @@ function startWorker() {
 
       users.push(newUser);
     } catch (err) {
+      // handle error silently
     }
-  }, 10 * 1000);
+  }, 20000);
 }
 
-module.exports = { startWorker };
+module.exports = startWorker;

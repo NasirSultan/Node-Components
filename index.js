@@ -1,28 +1,17 @@
-// index.js
-const express = require('express');
-const { users } = require('./storage');
-const { startWorker } = require('./worker');
+import express from 'express';
+import dotenv from 'dotenv';
+import { login, refreshToken, protectedRoute, getUserData } from './auth.js';
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-const PORT = 3000;
-let isJobStarted = false;
 
-app.post('/start-job', (req, res) => {
-  if (!isJobStarted) {
-    startWorker();
-    isJobStarted = true;
-    res.send({ message: 'Job started: a new user will be added every 10 seconds.' });
-  } else {
-    res.send({ message: 'Job is already running.' });
-  }
-});
+app.post('/login', login);
+app.post('/refresh', refreshToken);
+app.get('/protected', protectedRoute);
+app.get('/user', getUserData);  
 
-app.get('/users', (req, res) => {
-  res.send({ total: users.length, users });
-});
 
-app.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
-});
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));

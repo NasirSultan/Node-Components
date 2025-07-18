@@ -12,7 +12,8 @@ app.post('/add-user', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-  res.json(users);
+ res.json({ count: users.length, users });
+
 });
 
 const PORT = 3000;
